@@ -13,18 +13,21 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   bool isLoading = false;
   Post post = new Post(title: "", body: "");
-
   _callApiPost(int id) async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     var response = await Network.GET(Network.API_LIST + '/${widget.uid}', Network.paramsEmpty());
-    setState(() {
-      if (response != null) {
-        post = Network.parsePost(response);
-      }
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        if (response != null) {
+          post = Network.parsePost(response);
+        }
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -33,6 +36,7 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
     _callApiPost(widget.uid);
   }
+
 
   @override
   Widget build(BuildContext context) {
